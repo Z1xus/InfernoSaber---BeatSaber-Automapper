@@ -9,6 +9,8 @@
 # /mnt/c/Users/frede/Desktop/BS_Automapper/InfernoSaber---BeatSaber-Automapper
 
 import os
+from pathlib import Path
+import sys
 from tools.config import config
 
 
@@ -21,21 +23,17 @@ bs_input_path = ""
 
 ############################# (no need to change)
 # main workspace path
-main_path = os.path.abspath(os.getcwd())
-max_tries = 3
-for i in range(0, max_tries):
-    if not os.path.isfile(main_path + '/main.py'):
-        # not found, search root folder
-        main_path = os.path.dirname(main_path)
-    else:
-        # found main folder
-        break
-
-if not os.path.isfile(main_path + '/main.py'):
+def find_repo_root():
+    here = Path(__file__).resolve()
+    for parent in [here.parent] + list(here.parents):
+        if (parent / 'main.py').is_file():
+            return str(parent)
     print(f"dir_path={dir_path}")
-    print(f"main_path={main_path}")
+    print(f"main_path={os.path.abspath(os.getcwd())}")
     print("Could not find root directory. Exit")
-    exit()
+    sys.exit(1)
+
+main_path = find_repo_root().replace('\\', '/')
 main_path += '/'
 
 ########################
